@@ -15,17 +15,14 @@ void banking::update(const char operation, const std::string& filepath) {
         throw std::runtime_error("Error opening file");
     
     try
-    {
         inFile >> data;
-    }
-    catch(const json::parse_error& e)
-    {
+    catch(const json::parse_error& e) {
         std::cerr << "Error parsing json file" << std::endl;
         inFile.close();
         return;
     }
-    inFile.close();
 
+    inFile.close();
     double balance = data["balance"];
 
     double amount;
@@ -52,10 +49,9 @@ void banking::update(const char operation, const std::string& filepath) {
     std::cout << (operation == '+' ? "Deposit" : "withdrawal") << "Successful!" << std::endl;
 }
 
-void banking::deposit(const std::string& filepath) {
-    update('+', filepath);
-} 
+void banking::deposit(const std::string& filepath)  { update('+', filepath); } 
+void banking::withdraw(const std::string& filepath) { update('-', filepath); }
 
-void banking::withdraw(const std::string& filepath) {
-    update('-', filepath);
-}
+
+
+
