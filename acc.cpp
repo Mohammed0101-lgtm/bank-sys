@@ -7,25 +7,11 @@
 #include <openssl/sha.h>
 
 // setters:
-void account::setOwner(const std::string& o) {
-    owner = o;
-}
-
-void account::setEmail(const std::string& e) {
-    email = e;
-}
-
-void account::setPassword(std::string& p) {
-    password = p;
-}
-
-void account::setNumber(unsigned int n) {
-    number = n;
-}
-
-void account::setBalance(double b) {
-    balance = b;
-}
+void account::setOwner(const std::string& o) { owner = o; }
+void account::setEmail(const std::string& e) { email = e; }
+void account::setPassword(std::string& p)    { password = p; }
+void account::setNumber(unsigned int n)      { number = n; }
+void account::setBalance(double b)           { balance = b; }
 
 // json maker 
 json account::toJson() const {
@@ -40,7 +26,7 @@ json account::toJson() const {
 void account::store() {
     //if dir not exist
     if (!std::filesystem::exists(Account_dir))
-        std::filesystem::create_directory(Account_dir);
+         std::filesystem::create_directory(Account_dir);
     
     if (!std::filesystem::exists(Account_dir))
         throw std::runtime_error("Failed to create directory");
@@ -53,6 +39,7 @@ void account::store() {
 
     // process filepath
     std::string filename = owner;
+    
     filename.erase(std::remove_if(filename.begin(), filename.end(), ::isspace), filename.end());
     transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
 
@@ -77,6 +64,7 @@ void account::store() {
 void account::display() {
     // process filename
     std::string filename = owner;
+    
     filename.erase(std::remove_if(filename.begin(), filename.end(), ::isspace), filename.end());
     transform(filename.begin(), filename.end(), filename.begin(), ::tolower);
 
@@ -90,9 +78,7 @@ void account::display() {
         throw std::runtime_error("Error opening file");
     
     try
-    {
         inFile >> data;
-    }
     catch(const json::parse_error& e)
     {
         std::cerr << "Error parsing json file" << std::endl;
@@ -103,9 +89,9 @@ void account::display() {
 
     // display account information
     std::cout << "----------------------------" << '\n';
-    std::cout << "| " << owner << "'s account |" << '\n';
-    std::cout << "Email: " << email << '\n';
-    std::cout << "Number: " << number << '\n';
+    std::cout << "| "        << owner   << "'s account |" << '\n';
+    std::cout << "Email: "   << email   << '\n';
+    std::cout << "Number: "  << number  << '\n';
     std::cout << "Balance: " << balance << '\n';
     std::cout << "----------------------------" << '\n';
 }
@@ -113,12 +99,12 @@ void account::display() {
 void account::erase() {
     // process filename
     std::string filename = owner;
+    
     filename.erase(std::remove_if(filename.begin(), filename.end(), ::isspace), filename.end());
     transform(filename.begin(), filename.end(), filename.end(), ::tolower);
 
     std::string filepath = Account_dir + filename + File_ext;
-
-    const char *file = filepath.c_str();
+    const char *file     = filepath.c_str();
 
     if (!remove(file)) 
         throw std::runtime_error("Failed to remove account");
@@ -128,15 +114,15 @@ void account::erase() {
 
 // hashing func
 std::string generateSalt() {
-  const int saltLength = 16;
-  unsigned char salt[saltLength];
-  RAND_bytes(salt, saltLength);
-
-  char saltString[saltLength * 2 + 1];
-  for (int i = 0; i < saltLength; i++)
-    sprintf(saltString + i * 2, "%02x", salt[i]);
-
-  return saltString;
+    const int saltLength = 16;
+    unsigned char salt[saltLength];
+    RAND_bytes(salt, saltLength);
+    
+    char saltString[saltLength * 2 + 1];
+    for (int i = 0; i < saltLength; i++)
+        sprintf(saltString + i * 2, "%02x", salt[i]);
+    
+    return saltString;
 }
 
 std::string bcryptHash(const std::string &password, const std::string &salt) {
