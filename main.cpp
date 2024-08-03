@@ -1,19 +1,17 @@
 #include <iostream>
 #include "acc.hpp"
-#include "in_out.hpp"
+#include "io.hpp"
 #include "bank.hpp"
 
-
 int main(void) {
-    io input;
-    std::cout << "---------------" << '\n';
+    in_out input;
+    std::cout << "+-------------+" << '\n';
     std::cout << "| Bank System |"  << '\n'; 
-    std::cout << "---------------" << '\n';
+    std::cout << "+-------------+" << '\n';
     std::cout << "1. Sign up" << '\n';
     std::cout << "2. Log in" << '\n';
     std::cout << "3. Show account list" << '\n';
-    std::cout << "4. Remove account" << '\n';
-    std::cout << "5. Search account" << '\n';
+    std::cout << "4. Search account" << '\n';
     std::cout << "0. Exit" << '\n';
     std::cout << "---------------" << '\n';
 
@@ -38,9 +36,6 @@ int main(void) {
             input.display_acc_list();
             break;
         case 4:
-            input.remove_acc();
-            break;
-        case 5:
             input.search_acc();
             break;
         case 0:

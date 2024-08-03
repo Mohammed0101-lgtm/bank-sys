@@ -1,9 +1,8 @@
 // input output manager header file
-#ifndef IN_OUT_H
-#define IN_OUT_H
+#ifndef IO_HPP
+#define IO_HPP
 
-class io {
-private:
+class in_out {
 public:
     void create_acc();
     void remove_acc();
@@ -12,4 +11,4 @@ public:
     void login();
 };
 
-#endif // IN_OUT_H
+#endif // IO_H
