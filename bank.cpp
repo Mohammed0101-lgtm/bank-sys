@@ -9,7 +9,6 @@
 #include <algorithm>
 #include <sstream>
 
-
 #define MAX_AMOUNT 1000000
 
 std::string transDir = "transactions/";
@@ -19,6 +18,7 @@ std::string convert_to_filename(std::string& string) {
     string.erase(std::remove_if(string.begin(), string.end(), ::isspace), string.end());
     std::transform(string.begin(), string.end(), string.begin(), ::tolower);
     string = Account_dir + string + File_ext;
+
     return string;
 }
 
@@ -38,7 +38,7 @@ void banking::update(const char operation, const std::string& filepath) {
     if (amount < 0 || amount > (operation == '+' ? MAX_AMOUNT : balance))
         throw std::out_of_range("input out of range");
 
-    balance = balance + static_cast<double>(operation == '+' ? amount : -amount);
+    balance            = balance + static_cast<double>(operation == '+' ? amount : -amount);
     data.at("balance") = balance;
 
     std::ofstream outFile(filepath, std::ios::out | std::ios::trunc);
@@ -52,17 +52,13 @@ void banking::update(const char operation, const std::string& filepath) {
     std::cout << (operation == '+' ? "Deposit" : "withdrawal") << " Successful!" << std::endl;
 }
 
-void banking::deposit(const std::string& filepath) {
-    update('+', filepath);
-} 
-
-void banking::withdraw(const std::string& filepath) {
-    update('-', filepath);
-}
+void banking::deposit(const std::string& filepath)  { update('+', filepath); } 
+void banking::withdraw(const std::string& filepath) { update('-', filepath); }
 
 std::string get_time() {
-    time_t t = time(&t);
+    time_t t   = time(&t);
     char *date = ctime(&t);
+   
     if (date == NULL) {
         std::cerr << "Failed to get transaction time" << std::endl;
         return "";
@@ -73,9 +69,8 @@ std::string get_time() {
     std::istringstream ss(date);
     std::string token;
 
-    while (ss >> token) {
+    while (ss >> token) 
         tokens.push_back(token);
-    }
 
     date_tokens[0] = tokens[2];
 
@@ -92,8 +87,7 @@ std::string get_time() {
     else if (tokens[1] == "Nov") { date_tokens[1] = "11"; } 
     else if (tokens[1] == "Dec") { date_tokens[1] = "12"; } 
 
-    date_tokens[2] = tokens[4];
-
+    date_tokens[2]  = tokens[4];
     std::string str = date_tokens[0] + "/" + date_tokens[1] + "/" + date_tokens[2];
 
     return str;
@@ -103,9 +97,11 @@ int make_transaction(const std::string& from, const std::string& to, unsigned in
     nlohmann::json data_1 = get_jsonData(from_filepath);
     nlohmann::json data_2 = get_jsonData(to_filepath);
 
-    unsigned int from_balance, to_balance;
+    unsigned int from_balance; 
+    unsigned int to_balance;
+    
     from_balance = data_1["balance"];
-    to_balance = data_2["balance"];
+    to_balance   = data_2["balance"];
 
     if (from_balance < amount) {
         std::cerr << "Insufficient funds!" << std::endl;
@@ -113,16 +109,16 @@ int make_transaction(const std::string& from, const std::string& to, unsigned in
     }
 
     from_balance -= amount;
-    to_balance += amount;
+    to_balance   += amount;
 
     data_1.at("balance") = from_balance;
     data_2.at("balance") = to_balance;
 
     transaction trans;
     trans.amount = amount;
-    trans.from = from;
-    trans.to = to;
-    trans.time = get_time();
+    trans.from   = from;
+    trans.to     = to;
+    trans.time   = get_time();
 
     if (isValid_trans(transDir, trans) == false) {
         std::cerr << "Invalid transaction!" << std::endl;
@@ -132,9 +128,8 @@ int make_transaction(const std::string& from, const std::string& to, unsigned in
     if (!std::filesystem::exists(transDir)) {
         std::filesystem::create_directory("transactions/");
 
-        if (!std::filesystem::exists(transDir)) {
+        if (!std::filesystem::exists(transDir)) 
             throw std::runtime_error("Failed to create file!");
-        }
     }
 
     std::string filepath = transDir + trans_file;
@@ -165,19 +160,19 @@ int make_transaction(const std::string& from, const std::string& to, unsigned in
 }
 
 void banking::make_trans(const std::string& filepath) {
-    nlohmann::json data_1 = get_jsonData(filepath);
-
-    std::string from = data_1.at("owner");
-    std::string from_filepath = from;
-    from_filepath = convert_to_filename(from_filepath);
-
-    std::string to = get_string("Enter beneficiary");
+    nlohmann::json data_1      =  get_jsonData(filepath);
+    std::string from           =  data_1.at("owner");
+    std::string from_filepath  =  from;
+    from_filepath              =  convert_to_filename(from_filepath);
+    std::string to             =  get_string("Enter beneficiary");
+    
     if (to == from) {
         std::cerr << "Option is unavailable!" << '\n';
         return;
     }
+    
     std::string to_filepath = to;
-    to_filepath = convert_to_filename(to_filepath);
+    to_filepath             = convert_to_filename(to_filepath);
 
     unsigned int amount;
     std::cout << "Enter amount: ";
