@@ -9,21 +9,20 @@
 #include <sstream>
 #include <stdexcept>
 
-const std::string saving_account = "saving";
+const std::string saving_account   = "saving";
 const std::string checking_account = "check";
 
 std::string get_Name() {
     std::string fullname = get_string("Enter full name");
-    while (fullname.empty()) {
+    
+    while (fullname.empty()) 
         fullname = get_string("name cannot be empty, try again");
-    }
 
-    for (int i = 0; fullname[i] != '\0'; i++) {
+    for (int i = 0; fullname[i] != '\0'; i++) 
         if (!isalpha(fullname[i]) && !isspace(fullname[i]) && fullname[i] != '\n') {
             std::cerr << "Invalid character detected: " << fullname[i] << '\n';
             return "";
         }
-    }
     
     return fullname;
 }
@@ -38,17 +37,16 @@ bool isValidEmail(const std::string& email) {
 std::string getEmail() {
     std::string email = get_string("Enter email adress");
 
-    while (email.empty()) {
+    while (email.empty()) 
         email = get_string("Email cannot be empty, try again");
-    }
 
     while (!isValidEmail(email)) {
         std::cout << "Invalid Email format!" << '\n';
         std::cout << "Email format should be: example@exaple.example" << '\n';
+        
         email = get_string("Enter email address again");
-        while (email.empty()) {
+        while (email.empty()) 
             email = get_string("Email cannot be empty, try again");
-        }
     }
     
     email.erase(std::remove_if(email.begin(), email.end(), ::isspace), email.end());
@@ -67,12 +65,9 @@ bool strongPassword(const std::string& password) {
         if (password[i] == password[i + 1] && password[i] == password[i + 2])
             return false;
 
-        if (isdigit(password[i]))
-            digit++;
-        else if (islower(password[i]))
-            lowerCase++;
-        else if (isupper(password[i]))
-            upperCase++;
+        if (isdigit(password[i]))      digit++;
+        else if (islower(password[i])) lowerCase++;
+        else if (isupper(password[i])) upperCase++;
     }
 
     if (lowerCase == 0 || upperCase == 0 || digit == 0)
@@ -84,9 +79,8 @@ bool strongPassword(const std::string& password) {
 std::string getPassword() {
     std::string password = get_string("Enter password");
     
-    while (password.empty()) {
+    while (password.empty()) 
         password = get_string("password cannot be empty, try again");
-    }
 
     while (!strongPassword(password)) {
         std::cout << "Password is weak, you're password should meet the following requirements:" << '\n';
@@ -95,10 +89,10 @@ std::string getPassword() {
         std::cout << "- At least one lower case letter" << '\n';
         std::cout << "- At least one digit" << '\n';
         std::cout << "- Shouldn't have three same consecutive characters" << '\n';
+        
         password = get_string("try again");
-        while (password.empty()) {
+        while (password.empty()) 
             password = get_string("password cannot be empty, try again");
-        }
     }
 
     return password;
@@ -107,28 +101,30 @@ std::string getPassword() {
 bool match(const std::string &name, const std::string &accountowner) {
     std::string strippedAccountowner = accountowner;
     strippedAccountowner.erase(std::remove(strippedAccountowner.begin(),
-                                            strippedAccountowner.end(), '\"'),
-                                            strippedAccountowner.end());
+                                           strippedAccountowner.end(), '\"'),
+                                           strippedAccountowner.end());
 
-    // Tokenize entered name
     std::vector<std::string> enteredTokens;
     std::istringstream enteredStream(name);
+    
     std::string enteredToken;
-    while (enteredStream >> enteredToken) {
+    while (enteredStream >> enteredToken) 
         enteredTokens.push_back(enteredToken);
-    }
 
     std::vector<std::string> accountownerTokens;
     std::istringstream ownerStream(strippedAccountowner);
     std::string ownerToken;
-    while (ownerStream >> ownerToken) {
+    while (ownerStream >> ownerToken) 
         accountownerTokens.push_back(ownerToken);
-    }
+    
 
     for (const std::string &enteredToken : enteredTokens) {
-        if (std::find(accountownerTokens.begin(), accountownerTokens.end(),
-                    enteredToken) == accountownerTokens.end())
-        return false;
+        if (std::find(accountownerTokens.begin(), 
+                      accountownerTokens.end(), 
+                      enteredToken) 
+            == accountownerTokens.end())
+            
+            return false;
     }
 
     return true;
@@ -137,20 +133,19 @@ bool match(const std::string &name, const std::string &accountowner) {
 std::vector<std::string> get_accList() {
     std::vector<std::string> owners;
 
-    for (const auto &entry : std::filesystem::directory_iterator(Account_dir)) {
+    for (const auto &entry : std::filesystem::directory_iterator(Account_dir)) 
         if (entry.is_regular_file() && entry.path().extension() == File_ext) {
             nlohmann::json data = get_jsonData(entry.path());
             owners.push_back(data.at("owner"));
         }
-    }
+        
     return owners;
 }
 
 bool validPassword(const std::string &stored_password, const std::string& encoded_salt, std::string &password) {
-    std::string salt = base64_decode(encoded_salt);
+    std::string salt                    = base64_decode(encoded_salt);
     std::string decoded_stored_password = base64_decode(stored_password);
-
-    std::string hashed_input_password = bcryptHash(password, salt);
+    std::string hashed_input_password   = bcryptHash(password, salt);
 
     return decoded_stored_password == hashed_input_password;
 }
@@ -159,38 +154,33 @@ void in_out::create_acc() {
     account acc;
 
     std::string account_type = get_string("Enter account type [ckeck / saving] : ");
-    if (account_type != checking_account && account_type != saving_account) {
+    if (account_type != checking_account && account_type != saving_account) 
         account_type = get_string("option unavailable , Enter account type [ckeck / saving] :");
-    }
+    
     acc.setType(account_type);
 
     std::string ownerName = get_Name();
-    acc.setowner(ownerName);
+    std::string email     = getEmail();
+    std::string password  = getPassword();
 
-    std::string email = getEmail();
     acc.setEmail(email);
-
-    std::string password = getPassword();
+    acc.setowner(ownerName);
     acc.setPassword(password);
 
     unsigned int counter = 1;
-    if (!std::filesystem::is_directory(Account_dir)) {
+    if (!std::filesystem::is_directory(Account_dir)) 
         std::filesystem::create_directory(Account_dir);
-    }
-    if (!std::filesystem::exists(Account_dir)) {
+        
+    if (!std::filesystem::exists(Account_dir)) 
         throw std::runtime_error("Failed to create account");
-    }
 
-    for (const auto& entry : std::filesystem::directory_iterator(Account_dir)) {
+    for (const auto& entry : std::filesystem::directory_iterator(Account_dir)) 
         if (entry.is_regular_file() && entry.path().extension() == File_ext) {
             counter++;
-        }
-    }
 
     acc.setNumber(counter);
     acc.setBalance(0.0);
     acc.setInterestRate(0.0);
-
     acc.store();
 
     std::cout << "Account created successfully!" << std::endl;
@@ -215,6 +205,7 @@ void in_out::search_acc() {
                         std::cout << "1. Display account information" << '\n';
                         std::cout << "2. Return" << '\n';
                         std::cout << "------------------------------" << '\n';
+                        
                         int choice;
                         std::cout << '\n' << "Enter choice: ";
                         std::cin >> choice;
@@ -228,17 +219,15 @@ void in_out::search_acc() {
                         }
                     }
                 }
-                // throw error if "file not found":
-                else { 
+                
+                else  
                     throw std::runtime_error("File not found");
-                }
             }
         }
-        // account not found:
+        
         throw std::runtime_error("Account not found");
-    } catch (const std::exception &e) {
+    } catch (const std::exception &e) 
         std::cerr << "Error: " << e.what() << std::endl;
-    }
 }
 
 void in_out::remove_acc() {
@@ -249,24 +238,22 @@ void in_out::remove_acc() {
         if (entry.is_regular_file() && entry.path().extension() == File_ext) {
             nlohmann::json data = get_jsonData(entry.path());
 
-            // remove account if found
             if (match(owner, data.at("owner"))) {
-                if (!remove(entry.path())) {
+                if (!remove(entry.path())) 
                     throw std::runtime_error("Failed to remove file!");
-                } 
+                
                 std::cout << "Account removed successfully!" << std::endl;
                 return;
             }
         }
     }
+
     std::cerr << "Account not found!" << std::endl;
 }
 
 void in_out::display_acc_list() {
-    // get the list of accounts owners names:
     std::vector<std::string> acc_list = get_accList();
 
-    // display names:
     std::cout << "+---------------+" << '\n';
     std::cout << "| Accounts list |" << '\n';
     std::cout << "+---------------+" << '\n';
@@ -274,23 +261,19 @@ void in_out::display_acc_list() {
         std::cout << "* " << owner << '\n';
     std::cout << "-----------------" << '\n';
 
-    /*---- ask for for account display----*/
-    // get user choice:
     char choice;
     std::cout << "Display an account information[Y / N]: ";
     std::cin >> choice;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    // display if choice 'y':
     if (choice == 'y' || choice == 'Y') {
-        // get the account owner name:
-        std::string owner = get_Name();
-
-        // display account info:
+        std::string owner    = get_Name();
         std::string filename = owner;
+        
         filename.erase(std::remove_if(filename.begin(), filename.end(), ::isspace), filename.end());
         transform(filename.begin(), filename.end(), filename.end(), ::tolower);
-        std::string filepath = Account_dir + filename + File_ext;
+
+        std::string filepath   = Account_dir + filename + File_ext;
         nlohmann::json js_data = get_jsonData(filepath);
 
         std::cout << "+-------------------------------+" << '\n';
@@ -301,7 +284,7 @@ void in_out::display_acc_list() {
         std::cout << "* Account type : " << js_data.at("type") << '\n';
         std::cout << "--------------------------------" << std::endl;
     }
-    // ignore if choice 'n'
+    
     else if (choice == 'n' || choice == 'N')
         return;
     else
@@ -359,16 +342,14 @@ void accessAccount(const std::string& filepath) {
         }
         case 5: {
             std::string confirme = get_string("Do you really want to remove this account?[Y/N]");
-            while (confirme != "Y" && confirme != "N" && confirme != "y" && confirme != "n") {
+            while (confirme != "Y" && confirme != "N" && confirme != "y" && confirme != "n") 
                 confirme = get_string("Do you really want to remove this account?[Y/N]");
-            }
 
             if (confirme == "Y" || confirme == "y") {
                 remove(filepath.c_str());
                 break;
-            } else {
+            } else 
                 break;
-            }
         }
 
     case 0:
@@ -392,6 +373,7 @@ void in_out::login() {
             
             if (email == data.at("email")) {
                 found = true;
+                
                 if (validPassword(data.at("password"), data.at("salt"), password)) {
                     correct = true;
                     accessAccount(entry.path());
