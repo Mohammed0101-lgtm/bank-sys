@@ -13,7 +13,8 @@ int write_transaction(const std::string& filepath, transaction& trans) {
         return -1;
     }
  
-    file << trans.from << ", " << trans.to << ", " << trans.amount << ", " << trans.time << std::endl;
+    file << trans.from   << ", "  << trans.to   << ", "       
+         << trans.amount << ", "  << trans.time << std::endl;
 
     file.close();
     
@@ -21,28 +22,27 @@ int write_transaction(const std::string& filepath, transaction& trans) {
 }
 
 transaction parse_line(const std::string& line) {
-    transaction trans;
+    transaction              trans;
     std::vector<std::string> tokens;
-    std::stringstream ss(line);
-    std::string token;
+    std::stringstream        ss(line);
+    std::string              token;
 
     while (getline(ss, token, ',')) {
         token.erase(std::remove_if(token.begin(), token.end(), ::isspace), token.end());
-        if (!token.empty()) {
+        if (!token.empty()) 
             tokens.push_back(token);
-        }
     }
 
-    if (tokens.size() != 5) {
+    if (tokens.size() != 5) 
         throw std::runtime_error("Invalid transaction format");
-    }
 
     trans.from = tokens[0];
-    trans.to = tokens[1];
+    trans.to   = tokens[1];
+    
     std::copy(tokens[2].begin(), tokens[2].end(), trans.location);
     trans.location[tokens[2].size()] = '\0';
-    trans.time = tokens[3];
-    trans.amount = std::stoi(tokens[4]);
+    trans.time                       = tokens[3];
+    trans.amount                     = std::stoi(tokens[4]);
 
     return trans;
 }   
@@ -51,9 +51,8 @@ std::vector<transaction> load_transactions(const std::string& filepath) {
     std::vector<transaction> data;
 
     std::ifstream file(filepath, std::ios::in);
-    if (!file.is_open()) {
+    if (!file.is_open()) 
         return data;
-    }
 
     std::string line;
     while (getline(file, line)) {
