@@ -8,21 +8,21 @@
 #include <openssl/rand.h>
 
 // setters:
-void account::setowner(const std::string& o)    { owner = o; }
-void account::setEmail(const std::string& e)    { email = e; }
-void account::setPassword(std::string& p)       { password = p; }
-void account::setNumber(unsigned int n)         { number = n; }
-void account::setBalance(double b)              { balance = b; }
-void account::setType(const std::string& t)     { type = t; }
+void account::setowner(const std::string& o)    { owner         = o; }
+void account::setEmail(const std::string& e)    { email         = e; }
+void account::setPassword(std::string& p)       { password      = p; }
+void account::setNumber(unsigned int n)         { number        = n; }
+void account::setBalance(double b)              { balance       = b; }
+void account::setType(const std::string& t)     { type          = t; }
 void account::setInterestRate(double r)         { interest_rate = r; }
 
 // getters:
-std::string account::getEmail()     { return email; }
-std::string account::getType()      { return type; }
-std::string account::getOwner()     { return owner; }
+std::string account::getEmail()     { return email;         }
+std::string account::getType()      { return type;          }
+std::string account::getOwner()     { return owner;         }
 double account::getInterestRate()   { return interest_rate; }
-double account::getBalance()        { return balance; }
-unsigned int account::getNumber()   { return number; }
+double account::getBalance()        { return balance;       }
+unsigned int account::getNumber()   { return number;        }
 
 // json maker
 nlohmann::json account::toJson() const {
