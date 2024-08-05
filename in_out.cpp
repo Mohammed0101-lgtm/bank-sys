@@ -1,13 +1,15 @@
-#include "bank.hpp"
-#include "acc.hpp"
-#include "config.hpp"
-#include "io.hpp"
 
 #include <nlohmann/json.hpp>
 #include <regex>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+
+#include "bank.hpp"
+#include "acc.hpp"
+#include "config.hpp"
+#include "io.hpp"
+
 
 const std::string saving_account   = "saving";
 const std::string checking_account = "check";
@@ -41,10 +43,11 @@ std::string getEmail() {
         email = get_string("Email cannot be empty, try again");
 
     while (!isValidEmail(email)) {
-        std::cout << "Invalid Email format!" << '\n';
+        std::cout << "Invalid Email format!"                          << '\n';
         std::cout << "Email format should be: example@exaple.example" << '\n';
         
         email = get_string("Enter email address again");
+        
         while (email.empty()) 
             email = get_string("Email cannot be empty, try again");
     }
@@ -56,7 +59,9 @@ std::string getEmail() {
 }
 
 bool strongPassword(const std::string& password) {
-    int lowerCase = 0, digit = 0, upperCase = 0;
+    int lowerCase = 0;
+    int digit     = 0;
+    int upperCase = 0;
 
     if (password.length() < 6)
         return false;
@@ -84,10 +89,10 @@ std::string getPassword() {
 
     while (!strongPassword(password)) {
         std::cout << "Password is weak, you're password should meet the following requirements:" << '\n';
-        std::cout << "- Have six characters or more" << '\n';
-        std::cout << "- At least one upper case letter" << '\n';
-        std::cout << "- At least one lower case letter" << '\n';
-        std::cout << "- At least one digit" << '\n';
+        std::cout << "- Have six characters or more"                      << '\n';
+        std::cout << "- At least one upper case letter"                   << '\n';
+        std::cout << "- At least one lower case letter"                   << '\n';
+        std::cout << "- At least one digit"                               << '\n';
         std::cout << "- Shouldn't have three same consecutive characters" << '\n';
         
         password = get_string("try again");
@@ -105,27 +110,23 @@ bool match(const std::string &name, const std::string &accountowner) {
                                            strippedAccountowner.end());
 
     std::vector<std::string> enteredTokens;
-    std::istringstream enteredStream(name);
+    std::istringstream       enteredStream(name);
+    std::string              enteredToken;
     
-    std::string enteredToken;
     while (enteredStream >> enteredToken) 
         enteredTokens.push_back(enteredToken);
 
     std::vector<std::string> accountownerTokens;
-    std::istringstream ownerStream(strippedAccountowner);
-    std::string ownerToken;
+    std::istringstream       ownerStream(strippedAccountowner);
+    std::string              ownerToken;
+    
     while (ownerStream >> ownerToken) 
         accountownerTokens.push_back(ownerToken);
-    
 
-    for (const std::string &enteredToken : enteredTokens) {
-        if (std::find(accountownerTokens.begin(), 
-                      accountownerTokens.end(), 
-                      enteredToken) 
-            == accountownerTokens.end())
-            
+    for (const std::string &enteredToken : enteredTokens) 
+        if (std::find(accountownerTokens.begin(), accountownerTokens.end(), 
+                      enteredToken) == accountownerTokens.end())
             return false;
-    }
 
     return true;
 }
@@ -154,6 +155,7 @@ void in_out::create_acc() {
     account acc;
 
     std::string account_type = get_string("Enter account type [ckeck / saving] : ");
+    
     if (account_type != checking_account && account_type != saving_account) 
         account_type = get_string("option unavailable , Enter account type [ckeck / saving] :");
     
@@ -201,15 +203,17 @@ void in_out::search_acc() {
 
                     if (match(owner, data["owner"])) {
                         std::cout << "Account found!" << '\n';
+                        
                         std::cout << "------------------------------" << '\n';
                         std::cout << "1. Display account information" << '\n';
-                        std::cout << "2. Return" << '\n';
+                        std::cout << "2. Return"                      << '\n';
                         std::cout << "------------------------------" << '\n';
                         
                         int choice;
                         std::cout << '\n' << "Enter choice: ";
-                        std::cin >> choice;
+                        std::cin  >> choice;
                         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        
                         if (choice == 1) {
                             acc.setowner(owner);
                             acc.display();
@@ -218,10 +222,9 @@ void in_out::search_acc() {
                             return;
                         }
                     }
-                }
-                
-                else  
+                } else  {
                     throw std::runtime_error("File not found");
+                }
             }
         }
         
@@ -257,13 +260,15 @@ void in_out::display_acc_list() {
     std::cout << "+---------------+" << '\n';
     std::cout << "| Accounts list |" << '\n';
     std::cout << "+---------------+" << '\n';
+    
     for (std::string owner : acc_list)
         std::cout << "* " << owner << '\n';
+    
     std::cout << "-----------------" << '\n';
 
     char choice;
     std::cout << "Display an account information[Y / N]: ";
-    std::cin >> choice;
+    std::cin  >> choice;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     if (choice == 'y' || choice == 'Y') {
@@ -280,9 +285,9 @@ void in_out::display_acc_list() {
         std::cout << "| " << js_data.at("owner") << " |" << '\n';
         std::cout << "+-------------------------------+" << '\n';
         std::cout << "* Account number : " << js_data.at("number") << '\n';
-        std::cout << "* Email adress : " << js_data.at("email") << '\n';
-        std::cout << "* Account type : " << js_data.at("type") << '\n';
-        std::cout << "--------------------------------" << std::endl;
+        std::cout << "* Email adress : " << js_data.at("email")    << '\n';
+        std::cout << "* Account type : " << js_data.at("type")     << '\n';
+        std::cout << "--------------------------------"  << std::endl;
     }
     
     else if (choice == 'n' || choice == 'N')
@@ -292,24 +297,24 @@ void in_out::display_acc_list() {
 }
 
 void accessAccount(const std::string& filepath) {
-    std::cout << "------------------------------" << '\n';
-    std::cout << "1. Display account information" << '\n';
-    std::cout << "2. Deposit" << '\n';
-    std::cout << "3. Withdraw" << '\n';
-    std::cout << "4. Make a transaction" << '\n';
-    std::cout << "5. Remove account" << '\n';
-    std::cout << "0. Log out" << '\n';
-    std::cout << "------------------------------" << '\n';
+    std::cout <<  "------------------------------"  << '\n';
+    std::cout <<  "1. Display account information"  << '\n';
+    std::cout <<  "2. Deposit"                      << '\n';
+    std::cout <<  "3. Withdraw"                     << '\n';
+    std::cout <<  "4. Make a transaction"           << '\n';
+    std::cout <<  "5. Remove account"               << '\n';
+    std::cout <<  "0. Log out"                      << '\n';
+    std::cout <<  "------------------------------"  << '\n';
 
     int choice;
     std::cout << "Enter choice: ";
-    std::cin >> choice;
+    std::cin  >> choice;
 
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     while (choice < 0 || choice > 5) {
         std::cerr << "Error: incorrect choice, try again: ";
-        std::cin >> choice;
+        std::cin  >> choice;
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 
@@ -362,10 +367,10 @@ void accessAccount(const std::string& filepath) {
 }
 
 void in_out::login() {
-    std::string email = getEmail();
+    std::string email    = getEmail();
     std::string password = get_string("Enter password");
-
-    bool found = false, correct = false;
+    bool found           = false; 
+    bool correct         = false;
 
     for (const auto &entry : std::filesystem::directory_iterator(Account_dir)) {
         if (entry.is_regular_file() && entry.path().extension() == File_ext) {
