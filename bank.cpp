@@ -11,7 +11,7 @@
 
 #define MAX_AMOUNT 1000000
 
-std::string transDir = "transactions/";
+std::string transDir   = "transactions/";
 std::string trans_file = "trans.csv";
 
 std::string convert_to_filename(std::string& string) {
@@ -24,8 +24,7 @@ std::string convert_to_filename(std::string& string) {
 
 void banking::update(const char operation, const std::string& filepath) {
     nlohmann::json data = get_jsonData(filepath);
-
-    double balance = data.at("balance");
+    double balance      = data.at("balance");
 
     double amount;
     std::cout << "Enter the" << (operation == '+' ? " deposit" : " withdrawal") << " amount: ";
@@ -126,7 +125,7 @@ int make_transaction(const std::string& from, const std::string& to, unsigned in
     } 
     
     if (!std::filesystem::exists(transDir)) {
-        std::filesystem::create_directory("transactions/");
+         std::filesystem::create_directory("transactions/");
 
         if (!std::filesystem::exists(transDir)) 
             throw std::runtime_error("Failed to create file!");
@@ -176,7 +175,7 @@ void banking::make_trans(const std::string& filepath) {
 
     unsigned int amount;
     std::cout << "Enter amount: ";
-    std::cin >> amount;
+    std::cin  >> amount;
 
     make_transaction(from, to, amount, from_filepath, to_filepath);
 }
