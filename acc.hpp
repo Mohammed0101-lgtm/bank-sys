@@ -4,18 +4,18 @@
 #include <nlohmann/json.hpp>
 
 const std::string Account_dir = "Accounts/";
-const std::string File_ext = ".json";
+const std::string File_ext    = ".json";
 
 class account {
 private:
 
-    std::string type;
-    std::string owner;
-    std::string email;
-    std::string password;
-    std::string salt;
-    double balance;
-    double interest_rate;
+    std::string  type;
+    std::string  owner;
+    std::string  email;
+    std::string  password;
+    std::string  salt;
+    double       balance;
+    double       interest_rate;
     unsigned int number;
 
 public:
