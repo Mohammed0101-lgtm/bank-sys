@@ -284,9 +284,9 @@ void in_out::display_acc_list() {
         std::cout << "+-------------------------------+" << '\n';
         std::cout << "| " << js_data.at("owner") << " |" << '\n';
         std::cout << "+-------------------------------+" << '\n';
-        std::cout << "* Account number : " << js_data.at("number") << '\n';
-        std::cout << "* Email adress : " << js_data.at("email")    << '\n';
-        std::cout << "* Account type : " << js_data.at("type")     << '\n';
+        std::cout << "* Account number : "               << js_data.at("number") << '\n';
+        std::cout << "* Email adress   : "               << js_data.at("email")    << '\n';
+        std::cout << "* Account type   : "               << js_data.at("type")     << '\n';
         std::cout << "--------------------------------"  << std::endl;
     }
     
@@ -299,11 +299,11 @@ void in_out::display_acc_list() {
 void accessAccount(const std::string& filepath) {
     std::cout <<  "------------------------------"  << '\n';
     std::cout <<  "1. Display account information"  << '\n';
-    std::cout <<  "2. Deposit"                      << '\n';
-    std::cout <<  "3. Withdraw"                     << '\n';
-    std::cout <<  "4. Make a transaction"           << '\n';
-    std::cout <<  "5. Remove account"               << '\n';
-    std::cout <<  "0. Log out"                      << '\n';
+    std::cout <<  "2. Deposit                    "  << '\n';
+    std::cout <<  "3. Withdraw                   "  << '\n';
+    std::cout <<  "4. Make a transaction         "  << '\n';
+    std::cout <<  "5. Remove account             "  << '\n';
+    std::cout <<  "0. Log out                    "  << '\n';
     std::cout <<  "------------------------------"  << '\n';
 
     int choice;
