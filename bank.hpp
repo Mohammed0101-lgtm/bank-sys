@@ -4,10 +4,12 @@
 
 #include <iostream>
 
-class banking {
-private:
+class banking
+{
+   private:
     int var = 0;
-public:
+
+   public:
     void update(const char operation, const std::string& filepath);
     void withdraw(const std::string& filepath);
     void deposit(const std::string& filepath);
@@ -15,4 +17,4 @@ public:
     void make_loan(const std::string& filepath);
 };
 
-#endif // BANK_H
+#endif  // BANK_H
