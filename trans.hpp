@@ -3,7 +3,7 @@
 
 #include <string>
 
-struct transaction
+struct Transaction
 {
     char*        location;
     std::string  from;
@@ -12,11 +12,9 @@ struct transaction
     unsigned int amount;
 };
 
-typedef struct transaction transaction;
-
-int                      write_transaction(const std::string& filepath, transaction& trans);
-transaction              parse_line(const std::string& line);
-std::vector<transaction> load_transactions(const std::string& filepath);
-bool                     isValid_trans(const std::string& filepath, transaction trans);
+int                      write_transaction(const std::string& filepath, Transaction& trans);
+Transaction              parse_line(const std::string& line);
+std::vector<Transaction> load_transactions(const std::string& filepath);
+bool                     isValid_trans(const std::string& filepath, Transaction trans);
 
 #endif  // trans_hpp

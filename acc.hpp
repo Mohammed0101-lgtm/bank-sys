@@ -6,7 +6,7 @@
 const std::string Account_dir = "Accounts/";
 const std::string File_ext    = ".json";
 
-class account
+class Account
 {
    private:
     std::string  type;
@@ -19,7 +19,7 @@ class account
     unsigned int number;
 
    public:
-    account() :
+    Account() :
         balance(0.0) {}
 
     // setters:

@@ -1,4 +1,4 @@
-// account header implememtation
+// Account header implememtation
 #include "acc.hpp"
 #include "config.hpp"
 #include <filesystem>
@@ -8,29 +8,29 @@
 #include <openssl/sha.h>
 
 // setters:
-void account::setowner(const std::string& o) { owner = o; }
-void account::setEmail(const std::string& e) { email = e; }
-void account::setPassword(std::string& p) { password = p; }
-void account::setNumber(unsigned int n) { number = n; }
-void account::setBalance(double b) { balance = b; }
-void account::setType(const std::string& t) { type = t; }
-void account::setInterestRate(double r) { interest_rate = r; }
+void Account::setowner(const std::string& o) { owner = o; }
+void Account::setEmail(const std::string& e) { email = e; }
+void Account::setPassword(std::string& p) { password = p; }
+void Account::setNumber(unsigned int n) { number = n; }
+void Account::setBalance(double b) { balance = b; }
+void Account::setType(const std::string& t) { type = t; }
+void Account::setInterestRate(double r) { interest_rate = r; }
 
 // getters:
-std::string  account::getEmail() { return email; }
-std::string  account::getType() { return type; }
-std::string  account::getOwner() { return owner; }
-double       account::getInterestRate() { return interest_rate; }
-double       account::getBalance() { return balance; }
-unsigned int account::getNumber() { return number; }
+std::string  Account::getEmail() { return email; }
+std::string  Account::getType() { return type; }
+std::string  Account::getOwner() { return owner; }
+double       Account::getInterestRate() { return interest_rate; }
+double       Account::getBalance() { return balance; }
+unsigned int Account::getNumber() { return number; }
 
 // json maker
-nlohmann::json account::toJson() const {
+nlohmann::json Account::toJson() const {
     return {{"type", type}, {"owner", owner},   {"email", email},     {"password", password},
             {"salt", salt}, {"number", number}, {"balance", balance}, {"rate", interest_rate}};
 }
 
-void account::store() {
+void Account::store() {
     if (!std::filesystem::exists(Account_dir))
     {
         std::filesystem::create_directory(Account_dir);
@@ -60,7 +60,7 @@ void account::store() {
 
     if (!accFile.is_open())
     {
-        std::cerr << "Error creating account file" << std::endl;
+        std::cerr << "Error creating Account file" << std::endl;
         return;
     }
     else
@@ -78,8 +78,8 @@ void account::store() {
 }
 
 
-void account::display() {
-    account acc;
+void Account::display() {
+    Account acc;
 
     std::string filename = owner;
     filename.erase(std::remove_if(filename.begin(), filename.end(), ::isspace), filename.end());
@@ -89,7 +89,7 @@ void account::display() {
     nlohmann::json js_data  = get_jsonData(filepath);
 
     std::cout << "+--------------------------+" << '\n';
-    std::cout << "| " << owner << "'s account |" << '\n';
+    std::cout << "| " << owner << "'s Account |" << '\n';
     std::cout << "+--------------------------+" << '\n';
 
     std::cout << "Email   : " << js_data.at("email") << '\n';

@@ -6,7 +6,7 @@
 
 #include "trans.hpp"
 
-int write_transaction(const std::string& filepath, transaction& trans) {
+int write_transaction(const std::string& filepath, Transaction& trans) {
     std::ofstream file(filepath, std::ios::app);
     if (!file.is_open())
     {
@@ -21,8 +21,8 @@ int write_transaction(const std::string& filepath, transaction& trans) {
     return 0;
 }
 
-transaction parse_line(const std::string& line) {
-    transaction              trans;
+Transaction parse_line(const std::string& line) {
+    Transaction              trans;
     std::vector<std::string> tokens;
     std::stringstream        ss(line);
     std::string              token;
@@ -35,7 +35,7 @@ transaction parse_line(const std::string& line) {
     }
 
     if (tokens.size() != 5)
-        throw std::runtime_error("Invalid transaction format");
+        throw std::runtime_error("Invalid Transaction format");
 
     trans.from = tokens[0];
     trans.to   = tokens[1];
@@ -48,8 +48,8 @@ transaction parse_line(const std::string& line) {
     return trans;
 }
 
-std::vector<transaction> load_transactions(const std::string& filepath) {
-    std::vector<transaction> data;
+std::vector<Transaction> load_transactions(const std::string& filepath) {
+    std::vector<Transaction> data;
 
     std::ifstream file(filepath, std::ios::in);
     if (!file.is_open())
@@ -60,7 +60,7 @@ std::vector<transaction> load_transactions(const std::string& filepath) {
     {
         try
         {
-            transaction trans = parse_line(line);
+            Transaction trans = parse_line(line);
             data.push_back(trans);
         } catch (const std::exception& e)
         { std::cerr << "Failed to parse line: " << e.what() << std::endl; }
@@ -70,12 +70,12 @@ std::vector<transaction> load_transactions(const std::string& filepath) {
     return data;
 }
 
-bool isValid_trans(const std::string& filepath, transaction trans) {
-    std::vector<transaction> data = load_transactions(filepath);
+bool isValid_trans(const std::string& filepath, Transaction trans) {
+    std::vector<Transaction> data = load_transactions(filepath);
     if (data.empty())
         return true;
 
-    // Add custom transaction validity conditions if needed
+    // Add custom Transaction validity conditions if needed
 
     return true;
 }

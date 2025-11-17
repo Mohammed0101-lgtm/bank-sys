@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-class banking
+class Banking
 {
    private:
     int var = 0;

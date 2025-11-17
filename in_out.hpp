@@ -2,7 +2,7 @@
 #ifndef IO_HPP
 #define IO_HPP
 
-class in_out
+class IO
 {
    public:
     void create_acc();

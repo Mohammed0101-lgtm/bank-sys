@@ -22,7 +22,7 @@ std::string convert_to_filename(std::string& string) {
     return string;
 }
 
-void banking::update(const char operation, const std::string& filepath) {
+void Banking::update(const char operation, const std::string& filepath) {
     nlohmann::json data    = get_jsonData(filepath);
     double         balance = data.at("balance");
 
@@ -51,8 +51,8 @@ void banking::update(const char operation, const std::string& filepath) {
     std::cout << (operation == '+' ? "Deposit" : "withdrawal") << " Successful!" << std::endl;
 }
 
-void banking::deposit(const std::string& filepath) { update('+', filepath); }
-void banking::withdraw(const std::string& filepath) { update('-', filepath); }
+void Banking::deposit(const std::string& filepath) { update('+', filepath); }
+void Banking::withdraw(const std::string& filepath) { update('-', filepath); }
 
 std::string get_time() {
     time_t t    = time(&t);
@@ -60,7 +60,7 @@ std::string get_time() {
 
     if (date == NULL)
     {
-        std::cerr << "Failed to get transaction time" << std::endl;
+        std::cerr << "Failed to get Transaction time" << std::endl;
         return "";
     }
 
@@ -155,7 +155,7 @@ int make_transaction(const std::string& from,
     data_1.at("balance") = from_balance;
     data_2.at("balance") = to_balance;
 
-    transaction trans;
+    Transaction trans;
     trans.amount = amount;
     trans.from   = from;
     trans.to     = to;
@@ -163,7 +163,7 @@ int make_transaction(const std::string& from,
 
     if (isValid_trans(transDir, trans) == false)
     {
-        std::cerr << "Invalid transaction!" << std::endl;
+        std::cerr << "Invalid Transaction!" << std::endl;
         return -1;
     }
 
@@ -178,7 +178,7 @@ int make_transaction(const std::string& from,
     std::string filepath = transDir + trans_file;
     if (write_transaction(filepath, trans) != 0)
     {
-        std::cerr << "Failed to store transaction information!" << std::endl;
+        std::cerr << "Failed to store Transaction information!" << std::endl;
         return -1;
     }
 
@@ -205,7 +205,7 @@ int make_transaction(const std::string& from,
     return 0;
 }
 
-void banking::make_trans(const std::string& filepath) {
+void Banking::make_trans(const std::string& filepath) {
     nlohmann::json data_1        = get_jsonData(filepath);
     std::string    from          = data_1.at("owner");
     std::string    from_filepath = from;
